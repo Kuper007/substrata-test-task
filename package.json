@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,6 +13,8 @@
   "dependencies": {
     "@azure/msal-node": "^2.6.4",
     "@microsoft/microsoft-graph-client": "^3.0.7",
+    "@types/koa": "^2.15.0",
+    "@types/koa-router": "^7.4.8",
     "dotenv": "^16.4.5",
     "isomorphic-fetch": "^3.0.0",
     "koa": "^2.15.0",
@@ -20,6 +22,8 @@
     "koa-morgan": "^1.0.1",
     "koa-router": "^12.0.1",
     "koa-session": "^6.4.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }
