@@ -1,4 +1,4 @@
-import { IGraphAPIService } from "../abstract/IGraphAPIService";
+import { IGraphAPIService } from "../types/IGraphAPIService";
 import { Client } from "@microsoft/microsoft-graph-client";
 
 export class MicrosoftGraphAPIService implements IGraphAPIService {
