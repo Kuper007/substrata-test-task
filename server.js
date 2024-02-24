@@ -7,13 +7,17 @@ const Router = require('koa-router');
 const { koaBody } = require('koa-body');
 
 const fetch = require('isomorphic-fetch');
-const { Client } = require("@microsoft/microsoft-graph-client");
-const { PublicClientApplication, ConfidentialClientApplication } = require("@azure/msal-node");
+const { PublicClientApplication } = require("@azure/msal-node");
 
 const clientId = process.env.MS_CLIENT_ID;
 const redirectUri = `http://localhost:${process.env.PORT}/redirect`;
 const tenantId = process.env.MS_TENANT_ID;
 const clientSecret = process.env.MS_CLIENT_SECRET;
+
+const koaOptions = {
+  origin: true,
+  credentials: true
+};
 
 // MSAL Configuration
 const msalConfig = {
@@ -26,21 +30,9 @@ const msalConfig = {
 
 const pca = new PublicClientApplication(msalConfig);
 
-const ccaConfig = {
-  auth: {
-    clientId,
-    authority: `https://login.microsoftonline.com/${tenantId}`,
-    clientSecret,
-  },
-};
-
-const cca = new ConfidentialClientApplication(ccaConfig);
-
 const scopes = ["https://graph.microsoft.com/.default"];
 
-
 const server = new Koa();
-
 const router = new Router()
 
 router.get('/', ctx => {
@@ -89,9 +81,11 @@ router.get('/redirect', async (ctx, next) => {
   try {
 
     const tokenResponse = await pca.acquireTokenByCode(tokenRequest);
-    console.log("*****Token*****:", tokenResponse)
     ctx.state.accessToken = tokenResponse.accessToken;
+    console.log("TOKEN", ctx.state.accessToken)
+
     await next();
+    ctx.redirect(`http://localhost:${process.env.PORT}/user`)
   } catch (error) {
     console.log(error)
     ctx.throw(401, 'Authentication failed');
@@ -100,6 +94,7 @@ router.get('/redirect', async (ctx, next) => {
 
 // Route to retrieve user data
 router.get('/user', async (ctx) => {
+  console.log("TOKEN", ctx.state.accessToken)
   const response = await fetch('https://graph.microsoft.com/v1.0/me', {
     headers: {
       Authorization: `Bearer ${ctx.state.accessToken}`,
