@@ -8,6 +8,8 @@ import { HandleSignInAsync } from "./useCases/signIn";
 import { HandleGetTokenAsync } from "./useCases/getToken";
 import { HandleGetEmailsLast5Async } from "./useCases/getEmailsLast5";
 
+require('dotenv').config();
+
 const clientId = process.env.MS_CLIENT_ID;
 const redirectUri = `http://localhost:${process.env.PORT}/auth-response`;
 const tenantId = process.env.MS_TENANT_ID;
