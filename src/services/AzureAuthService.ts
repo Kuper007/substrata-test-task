@@ -1,4 +1,4 @@
-import { IAuthService } from "../abstract/IAuthService";
+import { IAuthService } from "../types/IAuthService";
 import { PublicClientApplication } from "@azure/msal-node";
 
 export class AzureAuthService implements IAuthService {

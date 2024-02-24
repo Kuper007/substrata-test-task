@@ -1,6 +1,6 @@
-import { IAuthService } from "./abstract/IAuthService";
+import { IAuthService } from "./types/IAuthService";
 import { AzureAuthService } from "./services/AzureAuthService";
-import { IGraphAPIService } from "./abstract/IGraphAPIService";
+import { IGraphAPIService } from "./types/IGraphAPIService";
 import { MicrosoftGraphAPIService } from "./services/MicrosoftGraphAPIService";
 import * as Router from "koa-router";
 import * as Koa from "koa";
@@ -10,8 +10,10 @@ import { HandleGetEmailsLast5Async } from "./useCases/getEmailsLast5";
 
 require('dotenv').config();
 
+const port = Number(process.env.PORT) || 3030;
+
 const clientId = process.env.MS_CLIENT_ID;
-const redirectUri = `http://localhost:${process.env.PORT}/auth-response`;
+const redirectUri = `http://localhost:${port}/auth-response`;
 const tenantId = process.env.MS_TENANT_ID;
 const clientSecret = process.env.MS_CLIENT_SECRET;
 const scopes: string[] = [process.env.MS_SCOPE];
@@ -54,6 +56,10 @@ router.get('/auth-response', async (ctx: Koa.Context): Promise<void> => {
 router.get('/emails', async (ctx: Koa.Context): Promise<void> => {
   try {
     const accessToken: string = ctx.session.accessToken;
+
+    if(!accessToken) {
+      ctx.throw(401, 'User not authenticated. Please sign in first');
+    }
 
     const messages: any = await HandleGetEmailsLast5Async(graphAPIService, accessToken);
 
