@@ -63,7 +63,6 @@ router.get('/emails', async (ctx: Koa.Context): Promise<void> => {
 
     const messages: any = await HandleGetEmailsLast5Async(graphAPIService, accessToken);
 
-    console.log("messages: ", messages);
     ctx.body = messages;
   } catch (error) {
     console.log(error)
